@@ -1,5 +1,4 @@
-//Ver1.0.2
-//Author: twk@2ch
+load("script/missionData.js");
 
 var currentDockData = {};
 
@@ -39,6 +38,7 @@ function setFleet(fleetid) {
 		sumTaiku: 0,
 		sumSakuteki: 0,
 		sumKaryoku: 0,
+		flgShipEC: false
 	};
 
 	//艦隊データオブジェクト設定
@@ -135,6 +135,9 @@ function setFleet(fleetid) {
 		else if ((ships[i].stype == 7) && (ships[i].name.match(/^大鷹/)))
 		{
 			currentDockData.ECCount++;
+			if (i == 0) {
+				flgShipEC = true;
+			}
 		}
 		else
 		{
@@ -144,334 +147,33 @@ function setFleet(fleetid) {
 
 //遠征成功判定
 function getCanMission(missionID){
-	switch(missionID){
-		case 1: return sTypeFree(2, 1);
-		case 2: return sTypeFree(4, 2);
-		case 3: return sTypeFree(3, 3);
-		case 4: return sTypeLock2(3, 3, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0);
-		case 5: return sTypeLock2(4, 3, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0);
-		case 6: return sTypeFree(4, 4);
-		case 7: return sTypeFree(6, 5);
-		case 8: return sTypeFree(6, 6);
-		case 9: return sTypeLock2(4, 3, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0);
-		case 10: return sTypeLock(3, 3, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0);
-		case 11: return sTypeLock(4, 6, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0);
-		case 12: return sTypeLock(4, 4, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0);
-		case 13: return sTypeLock(6, 5, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 0, 0, 0);
-		case 14: return sTypeLock(6, 6, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0);
-		case 15: return sTypeLock(6, 9, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0);
-		case 16: return sTypeLock(6, 10, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0);
-		case 17: return sTypeLock(6, 20, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0);
-		case 18: return sTypeLock(6, 15, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0);
-		case 19: return sTypeLock(6, 20, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0);
-		case 20: return sTypeLock(2, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0);
-		case 21: return sTypeLock(5, 15, 30, 0, 3, 3, 1, 4, 0, 0, 0, 0, 0, 0, 0);
-		case 22: return sTypeLock(6, 30, 45, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0);
-		case 23: return sTypeLock(6, 50, 200, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0);
-		case 24: return sTypeLock(6, 50, 200, 3, 0, 0, 1, 4, 0, 0, 0, 0, 0, 0, 0); // 北方航路海上護衛
-		case 25: return sTypeLock(4, 25, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0);
-		case 26: return sTypeLock(4, 30, 0, 0, 0, 0, 1, 2, 1, 0, 0, 0, 0, 0, 0);
-		case 27: return sTypeLock(2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0);
-		case 28: return sTypeLock(3, 30, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0);
-		case 29: return sTypeLock(3, 50, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0);
-		case 30: return sTypeLock(4, 55, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0);
-		case 31: return sTypeLock(4, 60, 200, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0);
-		case 32: return sTypeLock(3, 5, 0, 21, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1);
-		case 33: return sTypeLock(2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0);
-		case 34: return sTypeLock(2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0);
-		case 35: return sTypeLock(6, 40, 0, 0, 0, 0, 0, 1, 2, 0, 0, 1, 0, 0, 0);
-		case 36: return sTypeLock(6, 30, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 2, 0, 0);
-		case 37: return sTypeLock(6, 50, 200, 0, 3, 4, 1, 5, 0, 0, 0, 0, 0, 0, 0);
-		case 38: return sTypeLock(6, 65, 240, 0, 4, 8, 0, 5, 0, 0, 0, 0, 0, 0, 0);
-		case 39: return sTypeLock(5, 3, 180, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 1, 0);
-		case 40: return sTypeLock(6, 25, 150, 3, 0, 0, 1, 2, 0, 0, 0, 0, 2, 0, 0); // 水上機前線輸送
-		case 41: return sTypeLock6(3, 30, 100, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 210, 0, 0, 60, 80);
-		case 42: return sTypeLock6(4, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-		case 43: return sTypeLock6(6, 0, 0, 7, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 280, 0, 1, 500, 0);
-		case 44: return sTypeLock6(6, 0, 0, 0, 3, 6, 1, 2, 2, 0, 0, 0, 1, 0, 0, 200, 0, 0, 0, 0);
-		case 100: return sTypeLock4(4, 5, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0); // 兵站強化任務
-		case 101: return sTypeLock4(4, 20, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 180, 4, 70); // 海峡警備行動
-		case 102: return sTypeLock5(5, 35, 185, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 280, 3, 1); // 長時間対潜警戒
-		case 103: return sTypeLock6(5, 40, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 0, 0, 0, 200, 0, 0, 300, 0);
-		case 104: return sTypeLock6(5, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 0, 0, 300, 0);
-		case 110: return sTypeLock3(6, 40, 150, 0, 0, 0, 1, 2, 0, 0, 0, 0, 1, 0, 0, 200, 0, 200, 140); // 南西方面航空偵察作戦
-		case 111: return sTypeLock6(6, 50, 0, 0, 0, 0, 1, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 360, 0);
-		case 112: return sTypeLock6(6, 50, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 400, 0);
-		case 113: return sTypeLock6(6, 0, 0, 0, 0 ,0, 1, 2, 0, 0, 1, 2, 0, 0, 0, 280, 0, 0, 500, 0);
-		default: return "?";
-	}
-}
+	var mdata = missionData["id_" + missionID];
 
-/**
- * 艦種縛り他諸条件
- * @param {number} shipCount 艦数
- * @param {number} flgShipLv 旗艦Lv
- * @param {number} sumShipLv 合計Lv
- * @param {number} flgType 旗艦艦種
- * @param {number} drumShipCount ドラム缶艦数
- * @param {number} drumCount ドラム缶合計数
- * @param {number} CLCount 軽巡
- * @param {number} DDCount 駆逐
- * @param {number} CVCount 空母
- * @param {number} CVBCount 航戦
- * @param {number} SSCount 潜水艦
- * @param {number} CACount 重巡
- * @param {number} AVCount 水母
- * @param {number} ASCount 潜水艦母艦
- * @param {number} TVCount 練習艦
- * @return {string} 成功判定
- */
-function sTypeLock(shipCount, flgShipLv, sumShipLv, flgType, drumShipCount, drumCount, CLCount, DDCount, CVCount, CVBCount, SSCount, CACount, AVCount, ASCount, TVCount){
-	if(currentDockData.shipCount >= shipCount &&
-			currentDockData.flgShipLv >= flgShipLv &&
-			currentDockData.sumShipLv >= sumShipLv &&
-			(flgType == 0 || currentDockData.flgType == flgType) &&
-			currentDockData.drumShipCount >= drumShipCount &&
-			currentDockData.drumCount >= drumCount &&
-			currentDockData.CLCount >= CLCount &&
-			currentDockData.DDCount >= DDCount &&
-			(currentDockData.CVCount + currentDockData.CVLCount + currentDockData.ACVCount + currentDockData.AVCount + currentDockData.ECCount) >= CVCount &&
-			currentDockData.CVBCount >= CVBCount &&
-			(currentDockData.SSCount + currentDockData.CVSCount) >= SSCount &&
-			currentDockData.CACount >= CACount &&
-			currentDockData.AVCount >= AVCount &&
-			currentDockData.ASCount >= ASCount &&
-			currentDockData.TVCount >= TVCount
-	){
-		return "○";
-	}else{
-		return "×";
-	}
-}
+	// 遠征のデータがない場合
+	if (mdata == undefined) return "?";
 
-/**
- * 艦種縛り他諸条件
- * @param {number} shipCount 艦数
- * @param {number} flgShipLv 旗艦Lv
- * @param {number} sumShipLv 合計Lv
- * @param {number} flgType 旗艦艦種
- * @param {number} drumShipCount ドラム缶艦数
- * @param {number} drumCount ドラム缶合計数
- * @param {number} CLCount 軽巡
- * @param {number} DDCount 駆逐
- * @param {number} CVCount 空母
- * @param {number} CVBCount 航戦
- * @param {number} SSCount 潜水艦
- * @param {number} CACount 重巡
- * @param {number} AVCount 水母
- * @param {number} ASCount 潜水艦母艦
- * @param {number} TVCount 練習艦
- * @return {string} 成功判定
- */
-function sTypeLock2(shipCount, flgShipLv, sumShipLv, flgType, drumShipCount, drumCount, CLCount, DDCount, CVCount, CVBCount, SSCount, CACount, AVCount, ASCount, TVCount){
-	if(currentDockData.shipCount >= shipCount &&
-			currentDockData.flgShipLv >= flgShipLv &&
-			currentDockData.sumShipLv >= sumShipLv &&
-			(flgType == 0 || currentDockData.flgType == flgType) &&
-			currentDockData.drumShipCount >= drumShipCount &&
-			currentDockData.drumCount >= drumCount &&
-			(((currentDockData.CLCount >= CLCount) && (currentDockData.DDCount >= DDCount))  || (currentDockData.DDCount >= 1 && currentDockData.DECount >= 3) || (currentDockData.CLCount >= 1 && currentDockData.DECount >= 2) || (currentDockData.TVCount >= 1 && currentDockData.DECount >= 2) || (currentDockData.ECCount >= 1 && currentDockData.DECount >= 2) || (currentDockData.ECCount >= 1 && currentDockData.DDCount >= 2)) &&
-			(currentDockData.CVCount + currentDockData.CVLCount + currentDockData.ACVCount + currentDockData.AVCount) >= CVCount &&
-			currentDockData.CVBCount >= CVBCount &&
-			(currentDockData.SSCount + currentDockData.CVSCount) >= SSCount &&
-			currentDockData.CACount >= CACount &&
-			currentDockData.AVCount >= AVCount &&
-			currentDockData.ASCount >= ASCount &&
-			currentDockData.TVCount >= TVCount
-	){
-		return "○";
-	}else{
-		return "×";
-	}
-}
+	var _shipNum = getValue(mdata.shipNum, 0);
+	var _flgShipLv = getValue(mdata.flgShipLv, 0);
+	var _shipLvSum = getValue(mdata.shipLvSum, 0);
+	var _flgShipType = getValue(mdata.flgShipType, 0);
+	var _drumShipNum = getValue(mdata.drumShipNum, 0);
+	var _drumNum = getValue(mdata.drumNum, 0);
+	var _taisen = getValue(mdata.taisen, 0);
+	var _taiku = getValue(mdata.taiku, 0);
+	var _sakuteki = getValue(mdata.sakuteki, 0);
+	var _karyoku = getValue(mdata.karyoku, 0);
 
-/**
- * 艦種縛り他諸条件
- * @param {number} shipCount 艦数
- * @param {number} flgShipLv 旗艦Lv
- * @param {number} sumShipLv 合計Lv
- * @param {number} flgType 旗艦艦種
- * @param {number} drumShipCount ドラム缶艦数
- * @param {number} drumCount ドラム缶合計数
- * @param {number} CLCount 軽巡
- * @param {number} DDCount 駆逐
- * @param {number} CVCount 空母
- * @param {number} CVBCount 航戦
- * @param {number} SSCount 潜水艦
- * @param {number} CACount 重巡
- * @param {number} AVCount 水母
- * @param {number} ASCount 潜水艦母艦
- * @param {number} TVCount 練習艦
- * @param {number} sumTaisen 合計対潜
- * @param {number} DECount 海防
- * @param {number} sumTaiku 合計対空
- * @param {number} sumSakuteki 合計索敵
- * @return {string} 成功判定
- */
-function sTypeLock3(shipCount, flgShipLv, sumShipLv, flgType, drumShipCount, drumCount, CLCount, DDCount, CVCount, CVBCount, SSCount, CACount, AVCount, ASCount, TVCount, sumTaisen, DECount, sumTaiku, sumSakuteki){
-	if(currentDockData.shipCount >= shipCount &&
-			currentDockData.flgShipLv >= flgShipLv &&
-			currentDockData.sumShipLv >= sumShipLv &&
-			(flgType == 0 || currentDockData.flgType == flgType) &&
-			currentDockData.drumShipCount >= drumShipCount &&
-			currentDockData.drumCount >= drumCount &&
-			currentDockData.CLCount >= CLCount &&
-			(((currentDockData.DDCount + currentDockData.DECount) >= DDCount) || 	((currentDockData.DDCount + currentDockData.DECount) >= DECount)) &&
-			(currentDockData.CVCount + currentDockData.CVLCount + currentDockData.ACVCount + currentDockData.AVCount) >= CVCount &&
-			currentDockData.CVBCount >= CVBCount &&
-			(currentDockData.SSCount + currentDockData.CVSCount) >= SSCount &&
-			currentDockData.CACount >= CACount &&
-			currentDockData.AVCount >= AVCount &&
-			currentDockData.ASCount >= ASCount &&
-			currentDockData.TVCount >= TVCount &&
-			(currentDockData.sumTaisen - currentDockData.sumMinusTaisen) >= sumTaisen &&
-			currentDockData.sumTaiku >= sumTaiku &&
-			currentDockData.sumSakuteki >= sumSakuteki
-
-	){
-		return "○";
-	}else{
-		return "×";
-	}
-}
-
-
-/**
- * 艦種縛り他諸条件
- * @param {number} shipCount 艦数
- * @param {number} flgShipLv 旗艦Lv
- * @param {number} sumShipLv 合計Lv
- * @param {number} flgType 旗艦艦種
- * @param {number} drumShipCount ドラム缶艦数
- * @param {number} drumCount ドラム缶合計数
- * @param {number} CLCount 軽巡
- * @param {number} DDCount 駆逐
- * @param {number} CVCount 空母
- * @param {number} CVBCount 航戦
- * @param {number} SSCount 潜水艦
- * @param {number} CACount 重巡
- * @param {number} AVCount 水母
- * @param {number} ASCount 潜水艦母艦
- * @param {number} TVCount 練習艦
- * @param {number} sumTaisen 合計対潜
- * @param {number} DECount 海防
- * @param {number} sumTaiku 合計対空
- * @return {string} 成功判定
- */
-function sTypeLock4(shipCount, flgShipLv, sumShipLv, flgType, drumShipCount, drumCount, CLCount, DDCount, CVCount, CVBCount, SSCount, CACount, AVCount, ASCount, TVCount, sumTaisen, DECount, sumTaiku){
-	if(currentDockData.shipCount >= shipCount &&
-			currentDockData.flgShipLv >= flgShipLv &&
-			currentDockData.sumShipLv >= sumShipLv &&
-			(flgType == 0 || currentDockData.flgType == flgType) &&
-			currentDockData.drumShipCount >= drumShipCount &&
-			currentDockData.drumCount >= drumCount &&
-			currentDockData.CLCount >= CLCount &&
-			(((currentDockData.DDCount + currentDockData.DECount) >= DDCount) || 	((currentDockData.DDCount + currentDockData.DECount) >= DECount)) &&
-			(currentDockData.CVCount + currentDockData.CVLCount + currentDockData.ACVCount + currentDockData.AVCount) >= CVCount &&
-			currentDockData.CVBCount >= CVBCount &&
-			(currentDockData.SSCount + currentDockData.CVSCount) >= SSCount &&
-			currentDockData.CACount >= CACount &&
-			currentDockData.AVCount >= AVCount &&
-			currentDockData.ASCount >= ASCount &&
-			currentDockData.TVCount >= TVCount &&
-			currentDockData.sumTaisen >= sumTaisen &&
-			currentDockData.sumTaiku >= sumTaiku
-	){
-		return "○";
-	}else{
-		return "×";
-	}
-}
-
-/**
- * 艦種縛り他諸条件
- * @param {number} shipCount 艦数
- * @param {number} flgShipLv 旗艦Lv
- * @param {number} sumShipLv 合計Lv
- * @param {number} flgType 旗艦艦種
- * @param {number} drumShipCount ドラム缶艦数
- * @param {number} drumCount ドラム缶合計数
- * @param {number} CLCount 軽巡
- * @param {number} DDCount 駆逐
- * @param {number} CVCount 空母
- * @param {number} CVBCount 航戦
- * @param {number} SSCount 潜水艦
- * @param {number} CACount 重巡
- * @param {number} AVCount 水母
- * @param {number} ASCount 潜水艦母艦
- * @param {number} TVCount 練習艦
- * @param {number} sumTaisen 合計対潜
- * @param {number} DECount 海防
- * @param {number} CVECount 護衛空母
- * @return {string} 成功判定
- */
-function sTypeLock5(shipCount, flgShipLv, sumShipLv, flgType, drumShipCount, drumCount, CLCount, DDCount, CVCount, CVBCount, SSCount, CACount, AVCount, ASCount, TVCount, sumTaisen, DECount, CVECount){
-	if(currentDockData.shipCount >= shipCount &&
-			currentDockData.flgShipLv >= flgShipLv &&
-			currentDockData.sumShipLv >= sumShipLv &&
-			(flgType == 0 || currentDockData.flgType == flgType) &&
-			currentDockData.drumShipCount >= drumShipCount &&
-			currentDockData.drumCount >= drumCount &&
-			(   ((currentDockData.CLCount >= CLCount && (currentDockData.DDCount + currentDockData.DECount) >= DDCount) || 	( currentDockData.CLCount >= CLCount && (currentDockData.DDCount + currentDockData.DECount) >= DECount)) || (currentDockData.DDCount >= 1 && currentDockData.DECount >= 3) || (currentDockData.TVCount >= 1 && currentDockData.DECount >= 2) || (currentDockData.ECCount >= 1 && currentDockData.DECount >= 2)  )  &&
-			(currentDockData.CVCount + currentDockData.CVLCount + currentDockData.ACVCount + currentDockData.AVCount) >= CVCount &&
-			currentDockData.CVBCount >= CVBCount &&
-			(currentDockData.SSCount + currentDockData.CVSCount) >= SSCount &&
-			currentDockData.CACount >= CACount &&
-			currentDockData.AVCount >= AVCount &&
-			currentDockData.ASCount >= ASCount &&
-			currentDockData.TVCount >= TVCount &&
-			currentDockData.sumTaisen >= sumTaisen
-
-	){
-		return "○";
-	}else{
-		return "×";
-	}
-}
-
-/**
- * 艦種縛り他諸条件
- * @param {number} shipCount 艦数
- * @param {number} flgShipLv 旗艦Lv
- * @param {number} sumShipLv 合計Lv
- * @param {number} flgType 旗艦艦種
- * @param {number} drumShipCount ドラム缶艦数
- * @param {number} drumCount ドラム缶合計数
- * @param {number} CLCount 軽巡
- * @param {number} DDCount 駆逐
- * @param {number} CVCount 空母
- * @param {number} CVBCount 航戦
- * @param {number} SSCount 潜水艦
- * @param {number} CACount 重巡
- * @param {number} AVCount 水母
- * @param {number} ASCount 潜水艦母艦
- * @param {number} TVCount 練習艦
- * @param {number} sumTaisen 合計対潜
- * @param {number} DECount 海防
- * @param {number} CVECount 護衛空母
- * @param {number} sumKaryoku 合計火力
- * @param {number} sumTaiku 合計対空
- * @return {string} 成功判定
- */
-function sTypeLock6(shipCount, flgShipLv, sumShipLv, flgType, drumShipCount, drumCount, CLCount, DDCount, CVCount, CVBCount, SSCount, CACount, AVCount, ASCount, TVCount, sumTaisen, DECount, CVECount, sumKaryoku, sumTaiku) {
-	if (currentDockData.shipCount >= shipCount &&
-		currentDockData.flgShipLv >= flgShipLv &&
-		currentDockData.sumShipLv >= sumShipLv &&
-		(flgType == 0 || currentDockData.flgType == flgType) &&
-		currentDockData.drumShipCount >= drumShipCount &&
-		currentDockData.drumCount >= drumCount &&
-		(((currentDockData.CLCount >= CLCount && (currentDockData.DDCount + currentDockData.DECount) >= DDCount) || (currentDockData.CLCount >= CLCount && (currentDockData.DDCount + currentDockData.DECount) >= DECount)) || (currentDockData.DDCount >= 1 && currentDockData.DECount >= 3) || (currentDockData.TVCount >= 1 && currentDockData.DECount >= 2) || (currentDockData.ECCount >= 1 && currentDockData.DECount >= 2)) &&
-		(currentDockData.CVCount + currentDockData.CVLCount + currentDockData.ACVCount + currentDockData.AVCount) >= CVCount &&
-		currentDockData.CVBCount >= CVBCount &&
-		(currentDockData.SSCount + currentDockData.CVSCount) >= SSCount &&
-		currentDockData.CACount >= CACount &&
-		currentDockData.AVCount >= AVCount &&
-		currentDockData.ASCount >= ASCount &&
-		currentDockData.TVCount >= TVCount &&
-		currentDockData.sumTaisen >= sumTaisen &&
-		currentDockData.sumKaryoku >= sumKaryoku &&
-		currentDockData.sumTaiku >= sumTaiku
-
+	if (currentDockData.shipCount >= _shipNum
+		&& currentDockData.flgShipLv >= _flgShipLv
+		&& currentDockData.sumShipLv >= _shipLvSum
+		&& (_flgShipType == 0 || currentDockData.flgType == _flgShipType)
+		&& currentDockData.drumShipCount >= _drumShipNum
+		&& currentDockData.drumCount >= _drumNum
+		&& (currentDockData.sumTaisen - currentDockData.sumMinusTaisen) >= _taisen
+		&& currentDockData.sumTaiku >= _taiku
+		&& currentDockData.sumSakuteki >= _sakuteki
+		&& currentDockData.sumKaryoku >= _karyoku
+		&& mdata.shipType(currentDockData)
 	) {
 		return "○";
 	} else {
@@ -480,19 +182,13 @@ function sTypeLock6(shipCount, flgShipLv, sumShipLv, flgType, drumShipCount, dru
 }
 
 /**
- * 艦種縛り無し
- * @param {number} shipCount 必要艦数
- * @param {number} flgShipLv 旗艦Lv
- * @return {string} 成功判定
+ * valueがundefinedのときにdefaultValueを返す
+ * @param {*} value
+ * @param {*} defaultValue
  */
-function sTypeFree(shipCount, flgShipLv){
-	if(currentDockData.shipCount >= shipCount && currentDockData.flgShipLv >= flgShipLv){
-		return "○";
-	}else{
-		return "×";
-	}
+function getValue(value, defaultValue) {
+	return value == undefined ? defaultValue : value;
 }
-
 
 //艦種記号
 //	DE	海防
