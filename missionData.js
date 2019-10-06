@@ -435,7 +435,7 @@ var missionData = {
         shipTypeText: "水母1 軽1 (駆+海)2 他2",
         shipType: function (data) {
             if (data.shipCount >= 6) {
-                if (data.AVCount >= 1 && data.CLCount >= 1 && (data.DDCount && data.DECount) >= 2) return true;
+                if (data.AVCount >= 1 && data.CLCount >= 1 && (data.DDCount + data.DECount) >= 2) return true;
             }
             return false;
         }
