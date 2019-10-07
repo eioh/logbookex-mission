@@ -114,6 +114,18 @@ function setFleet(fleetid) {
 			case 4: currentDockData.CLTCount++; break;
 			case 5: currentDockData.CACount++; break;
 			case 6: currentDockData.CVACount++; break;
+			case 7:
+				// 護衛空母
+				if (isEC(ships[i].name)) {
+					currentDockData.ECCount++;
+					if (i == 0) {
+						flgShipEC = true;
+					}
+				// 軽空母
+				} else {
+					currentDockData.CVLCount++;
+				}
+				break;
 			case 8: currentDockData.BBCount++; break;
 			case 9: currentDockData.BBCount++; break;
 			case 10: currentDockData.CVBCount++; break;
@@ -127,20 +139,6 @@ function setFleet(fleetid) {
 			case 19: currentDockData.ARCount++; break;
 			case 20: currentDockData.ASCount++; break;
 			case 21: currentDockData.TVCount++; break;
-		}
-		if ((ships[i].stype == 7) && (!(ships[i].name.match(/^大鷹/))))
-		{
-			currentDockData.CVLCount++;
-		}
-		else if ((ships[i].stype == 7) && (ships[i].name.match(/^大鷹/)))
-		{
-			currentDockData.ECCount++;
-			if (i == 0) {
-				flgShipEC = true;
-			}
-		}
-		else
-		{
 		}
 	}
 }
@@ -188,6 +186,22 @@ function getCanMission(missionID){
  */
 function getValue(value, defaultValue) {
 	return value == undefined ? defaultValue : value;
+}
+
+/**
+ * 護衛空母か
+ * @param {string} shipName 艦名
+ */
+function isEC(shipName) {
+	if (shipName.match(/^大鷹/)
+		|| shipName.match(/^神鷹/)
+		|| shipName.match(/^Gambier Bay/)
+		|| shipName.match(/^瑞鳳改二乙$/)
+	) {
+		return true;
+	}
+
+	return false;
 }
 
 //艦種記号
