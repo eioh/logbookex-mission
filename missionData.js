@@ -198,6 +198,7 @@ var missionData = {
         shipLvSum: 144,
         taiku: 70,
         taisen: 180,
+        disableTaisen: true,    // 一部装備の対潜値を無効にする
         sakuteki: 73,
         exp: 40,
         resource: {
@@ -219,6 +220,7 @@ var missionData = {
         shipLvSum: 185,
         taiku: 162,
         taisen: 280,
+        disableTaisen: true,
         sakuteki: 60,
         exp: 55,
         resource: {
@@ -423,6 +425,7 @@ var missionData = {
         flgShipLv: 40,
         shipLvSum: 150,
         taisen: 200,
+        disableTaisen: true,
         taiku: 200,
         sakuteki: 140,
         exp: 35,
@@ -954,7 +957,7 @@ var missionData = {
         flgShipType: 7, //軽空
         shipTypeText: "★護母1 (駆+海)2 他3 / ★軽空1 軽1 駆4",
         shipType: function (data) {
-            if (flgShipEC) {
+            if (data.flgShipEC) {
                 if (data.shipCount == 6) {
                     if (data.ECCount >= 1 && (data.DDCount + data.DECount) >= 2) return true;
                 }
