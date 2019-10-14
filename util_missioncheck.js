@@ -68,34 +68,9 @@ function setFleet(fleetid) {
 		currentDockData.sumTaisen += ships[i].getTaisen();
 
 		//対潜値対象外装備の合計
-		// +1 : 九八式水上偵察機(夜偵),OS2U,二式大艇,Ro.44水上戦闘機,二式水戦改,Ro.44水上戦闘機bis,二式水戦改(熟練)
+		var item2 = Java.from(ships[i].getItem2());
+		currentDockData.sumMinusTaisen += getMinusTaisen();
 
-		// +2 : Late 298B,瑞雲(六三一空),Ro.43水偵,零式水上偵察機,紫雲,PBY-5A Catalina
-		// +3 : 晴嵐(六三一空)
-		// +4 : 瑞雲,零式水上観測機
-		// +5 : 瑞雲(六三四空),瑞雲12型,Ar196改
-		// +6 : 瑞雲12型(六三四空),瑞雲(六三四空/熟練),試製晴嵐
-		// +7 : 零式水上偵察機11型乙
-		for(var j = 0; j < ships[i].slot.length; j++){
-
-			if((ships[i].slot[j].match(/^九八式水上偵察機\(夜偵\)$/)) || (ships[i].slot[j].match(/^OS2U$/)) || (ships[i].slot[j].match(/^二式大艇$/)) || (ships[i].slot[j].match(/^Ro.44水上戦闘機$/)) || (ships[i].slot[j].match(/^二式水戦改$/)) || (ships[i].slot[j].match(/^Ro.44水上戦闘機bis$/)) || (ships[i].slot[j].match(/^二式水戦改\(熟練\)$/))) {
-				currentDockData.sumMinusTaisen = currentDockData.sumMinusTaisen + 1;
-			} else if ((ships[i].slot[j].match(/^Lat/)) || (ships[i].slot[j].match(/^瑞雲\(六三一空\)$/)) || (ships[i].slot[j].match(/^Ro.43水偵$/)) || (ships[i].slot[j].match(/^零式水上偵察機$/)) || (ships[i].slot[j].match(/^紫雲$/)) || (ships[i].slot[j].match(/^PBY-5A Catalina$/))){
-				currentDockData.sumMinusTaisen = currentDockData.sumMinusTaisen + 2;
-			} else if (ships[i].slot[j].match(/^晴嵐\(六三一空\)$/)) {
-				currentDockData.sumMinusTaisen = currentDockData.sumMinusTaisen + 3;
-			} else if ((ships[i].slot[j].match(/^瑞雲$/)) || (ships[i].slot[j].match(/^零式水上観測機$/))) {
-				currentDockData.sumMinusTaisen = currentDockData.sumMinusTaisen + 4;
-			} else if ((ships[i].slot[j].match(/^瑞雲\(六三四空\)$/)) || (ships[i].slot[j].match(/^瑞雲12型$/)) || (ships[i].slot[j].match(/^Ar196改$/))) {
-				currentDockData.sumMinusTaisen = currentDockData.sumMinusTaisen + 5;
-			} else if ((ships[i].slot[j].match(/^瑞雲12型\(六三四空\)$/)) || (ships[i].slot[j].match(/^瑞雲\(六三四空\/熟練\)$/)) || (ships[i].slot[j].match(/^試製晴嵐$/))) {
-				currentDockData.sumMinusTaisen = currentDockData.sumMinusTaisen + 6;
-			} else if (ships[i].slot[j].match(/^零式水上偵察機11型乙$/)) {
-				currentDockData.sumMinusTaisen = currentDockData.sumMinusTaisen + 7;
-			} else {
-			}
-
-		}
 
 		//艦隊合計対空
 		currentDockData.sumTaiku += ships[i].getTaiku();
@@ -161,13 +136,17 @@ function getCanMission(missionID){
 	var _sakuteki = getValue(mdata.sakuteki, 0);
 	var _karyoku = getValue(mdata.karyoku, 0);
 
+	var curDockTaisen = disableTaisen
+		? (currentDockData.sumTaisen - currentDockData.sumMinusTaise)
+		: currentDockData.sumTaisen;
+
 	if (currentDockData.shipCount >= _shipNum
 		&& currentDockData.flgShipLv >= _flgShipLv
 		&& currentDockData.sumShipLv >= _shipLvSum
 		&& (_flgShipType == 0 || currentDockData.flgType == _flgShipType)
 		&& currentDockData.drumShipCount >= _drumShipNum
 		&& currentDockData.drumCount >= _drumNum
-		&& (currentDockData.sumTaisen - currentDockData.sumMinusTaisen) >= _taisen
+		&& curDockTaisen >= _taisen
 		&& currentDockData.sumTaiku >= _taiku
 		&& currentDockData.sumSakuteki >= _sakuteki
 		&& currentDockData.sumKaryoku >= _karyoku
@@ -175,7 +154,7 @@ function getCanMission(missionID){
 	) {
 		return "○";
 	} else {
-		return "×";
+		return "×"
 	}
 }
 
@@ -191,6 +170,7 @@ function getValue(value, defaultValue) {
 /**
  * 護衛空母か
  * @param {string} shipName 艦名
+ * @return {boolean}
  */
 function isEC(shipName) {
 	if (shipName.match(/^大鷹/)
@@ -202,6 +182,24 @@ function isEC(shipName) {
 	}
 
 	return false;
+}
+
+/**
+ * 無効な装備対潜値の合計
+ * @param {Array.<logbook.dto.ItemDto>} items 装備
+ */
+function getMinusTaisen(items) {
+	var ret = items.filter(function(item) {
+		// 装備なし
+		if (item == null) return false;
+		return item.type2 == 10		// 水上偵察機
+			|| item.type2 == 11		// 水上爆撃機
+			|| item.type2 == 41;	// 大型飛行艇
+	}).reduce(function (sum, item) {
+		return sum + item.param.tais;
+	}, 0);
+
+	return ret;
 }
 
 //艦種記号
