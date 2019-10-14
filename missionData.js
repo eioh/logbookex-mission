@@ -587,6 +587,10 @@ var missionData = {
         shipType: function (data) {
             if (data.CLCount >= 1 && data.DDCount >= 4) return true;
             return false;
+        },
+        greatSuccess: function(data) {  //大成功条件
+            if (data.kiraShipNum >= 4 && data.drumCount >= 4) return true;
+            return false;
         }
     },
     id_22: {
@@ -639,6 +643,10 @@ var missionData = {
             if (data.shipCount == 6) {
                 if (data.CLCount >= 1 && (data.DDCount + data.DECount) >= 4) return true;
             }
+            return false;
+        },
+        greatSuccess: function (data) {
+            if (data.kiraShipNum >= 4 && data.drumCount >= 4) return true;
             return false;
         }
     },
@@ -842,6 +850,10 @@ var missionData = {
         shipType: function (data) {
             if (data.CLCount >= 1 && data.DDCount >= 5) return true;
             return false;
+        },
+        greatSuccess: function (data) {
+            if (data.kiraShipNum >= 4 && data.drumCount >= 5) return true;
+            return false;
         }
     },
     id_38: {
@@ -861,6 +873,10 @@ var missionData = {
             if (data.shipCount == 6) {
                 if (data.DDCount >= 5) return true;
             }
+            return false;
+        },
+        greatSuccess: function (data) {
+            if (data.kiraShipNum >= 4 && data.drumCount >= 10) return true;
             return false;
         }
     },
@@ -898,6 +914,10 @@ var missionData = {
             if (data.shipCount == 6) {
                 if (data.CLCount >= 1 && data.AVCount >= 1 && data.DDCount >= 2) return true;
             }
+            return false;
+        },
+        greatSuccess: function (data) {
+            if (data.kiraShipNum >= 4 && data.drumCount >= 4) return true;
             return false;
         }
     },

@@ -38,7 +38,8 @@ function setFleet(fleetid) {
 		sumTaiku: 0,
 		sumSakuteki: 0,
 		sumKaryoku: 0,
-		flgShipEC: false
+		flgShipEC: false,
+		kiraShipNum: 0
 	};
 
 	//艦隊データオブジェクト設定
@@ -69,7 +70,7 @@ function setFleet(fleetid) {
 
 		//対潜値対象外装備の合計
 		var item2 = Java.from(ships[i].getItem2());
-		currentDockData.sumMinusTaisen += getMinusTaisen();
+		currentDockData.sumMinusTaisen += getMinusTaisen(item2);
 
 
 		//艦隊合計対空
@@ -80,6 +81,9 @@ function setFleet(fleetid) {
 
 		//艦隊合計索敵
 		currentDockData.sumKaryoku += ships[i].getKaryoku();
+
+		//キラ艦の数
+		if (ships[i].cond > 49) currentDockData.kiraShipNum++;
 
 		//艦種カウント
 		switch(ships[i].stype){
@@ -136,8 +140,8 @@ function getCanMission(missionID){
 	var _sakuteki = getValue(mdata.sakuteki, 0);
 	var _karyoku = getValue(mdata.karyoku, 0);
 
-	var curDockTaisen = disableTaisen
-		? (currentDockData.sumTaisen - currentDockData.sumMinusTaise)
+	var curDockTaisen = mdata.disableTaisen
+		? (currentDockData.sumTaisen - currentDockData.sumMinusTaisen)
 		: currentDockData.sumTaisen;
 
 	if (currentDockData.shipCount >= _shipNum
@@ -152,7 +156,15 @@ function getCanMission(missionID){
 		&& currentDockData.sumKaryoku >= _karyoku
 		&& mdata.shipType(currentDockData)
 	) {
-		return "○";
+		// 特別な大成功条件
+		if (mdata.greatSuccess != undefined && mdata.greatSuccess(currentDockData)) {
+			return "◎";
+		// 全キラ
+		} else if (currentDockData.shipCount == currentDockData.kiraShipNum) {
+			return "◎";
+		} else {
+			return "○";
+		}
 	} else {
 		return "×"
 	}
@@ -201,6 +213,7 @@ function getMinusTaisen(items) {
 
 	return ret;
 }
+
 
 //艦種記号
 //	DE	海防
