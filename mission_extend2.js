@@ -3,6 +3,7 @@ load("script/utils.js");
 function header() {
 	return [
 		"ID2#ソート用遠征ID",
+		"ID3#ゲーム中の表示ID",
 		"海域名#遠征海域名"
 	]
 }
@@ -10,8 +11,10 @@ function header() {
 function begin(fleetid) { }
 
 function body(data) {
+	var json = JSON.parse(data.getJsonString());
 	return toComparable([
 		getIdForSort(data.mapareaId, data.id),
+		json.api_disp_no,
 		getMapareaName(data.mapareaId)
 	]);
 }

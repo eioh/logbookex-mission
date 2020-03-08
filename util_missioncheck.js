@@ -1,4 +1,7 @@
 load("script/missionData.js");
+load("script/ScriptData.js");
+
+data_prefix = "missioncheck_";
 
 var currentDockData = {};
 
@@ -98,7 +101,7 @@ function setFleet(fleetid) {
 				if (isEC(ships[i].name)) {
 					currentDockData.ECCount++;
 					if (i == 0) {
-						flgShipEC = true;
+						currentDockData.flgShipEC = true;
 					}
 				// 軽空母
 				} else {
@@ -144,18 +147,22 @@ function getCanMission(missionID){
 		? (currentDockData.sumTaisen - currentDockData.sumMinusTaisen)
 		: currentDockData.sumTaisen;
 
-	if (currentDockData.shipCount >= _shipNum
-		&& currentDockData.flgShipLv >= _flgShipLv
-		&& currentDockData.sumShipLv >= _shipLvSum
-		&& (_flgShipType == 0 || currentDockData.flgType == _flgShipType)
-		&& currentDockData.drumShipCount >= _drumShipNum
-		&& currentDockData.drumCount >= _drumNum
-		&& curDockTaisen >= _taisen
-		&& currentDockData.sumTaiku >= _taiku
-		&& currentDockData.sumSakuteki >= _sakuteki
-		&& currentDockData.sumKaryoku >= _karyoku
-		&& mdata.shipType(currentDockData)
-	) {
+	var result = {
+		shipNum: currentDockData.shipCount >= _shipNum,
+		flgShipLv: currentDockData.flgShipLv >= _flgShipLv,
+		sumShipLv: currentDockData.sumShipLv >= _shipLvSum,
+		karyoku: currentDockData.sumKaryoku >= _karyoku,
+		taiku: currentDockData.sumTaiku >= _taiku,
+		sakuteki: currentDockData.sumSakuteki >= _sakuteki,
+		taisen: curDockTaisen >= _taisen,
+		drum: currentDockData.drumCount >= _drumNum && currentDockData.drumShipCount >= _drumShipNum,
+		fleet: mdata.shipType(currentDockData) && (_flgShipType == 0 || currentDockData.flgType == _flgShipType)
+	};
+
+	setTmpData("missionID_" + missionID, JSON.stringify(result));
+	var result2 = Object.keys(result).filter(function(v) {return result[v] === false});
+
+	if (result2.length == 0) {
 		// 特別な大成功条件
 		if (mdata.greatSuccess != undefined && mdata.greatSuccess(currentDockData)) {
 			return "◎";
@@ -166,7 +173,7 @@ function getCanMission(missionID){
 			return "○";
 		}
 	} else {
-		return "×"
+		return "×";
 	}
 }
 

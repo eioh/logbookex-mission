@@ -245,7 +245,7 @@ var missionData = {
     id_103: {
         shipNum: 5,
         flgShipLv: 40,
-        //shipLvSum: ???
+        shipLvSum: 200,
         taisen: 200,
         karyoku: 300,
         exp: 45,
@@ -445,8 +445,8 @@ var missionData = {
     },
     id_111: {
         shipNum: 6,
-        flagShipLv: 50,
-        //shipLvSum: ???
+        flagShipLv: 45,
+        shipLvSum: 220,
         karyoku: 360,
         exp: 70,
         resource: {
@@ -467,7 +467,7 @@ var missionData = {
     id_112: {
         shipNum: 6,
         flagShipLv: 50,
-        //shipLvSum: ???
+        shipLvSum: 260,
         karyoku: 400,
         exp: 50,
         resource: {
@@ -486,7 +486,7 @@ var missionData = {
     id_113: {
         shipNum: 6,
         flagShipLv: 55,
-        //shipLvSum: ???
+        shipLvSum: 410, //?
         karyoku: 500,
         taisen: 280,
         exp: 60,
@@ -657,8 +657,8 @@ var missionData = {
         exp: 80,
         resource: {
 			fuel: 900,
-            steel: 500
-            //, fBox???
+            steel: 500,
+            fBoxM: [0, 1]
 		},
         shipTypeText: "重2 駆2",
         shipType: function (data) {
@@ -777,6 +777,44 @@ var missionData = {
             return false;
         }
     },
+    id_131: {
+        shipNum: 5,
+        flgShipLv: 50,
+        shipLvSum: 200,
+        exp: 35,
+        taiku: 240,
+        taisen: 240,
+        sakuteki: 300,
+        resource: {
+            ammo: 20,
+            steel: 20,
+            bauxite: 100,
+            bucket: [0, 1]
+        },
+        shipTypeText: "★水母1 (駆+海)3 他1",
+        shipType: function (data) {
+            if (data.shipCount >= 5 && data.AVCount >= 1 && (data.DDCount + data.DECount) >= 3) return true;
+            return false;
+        }
+    },
+    id_132: {
+        shipNum: 5,
+        flgShipLv: 55,
+        // shipLvSum: 0,   //?
+        exp: 70,
+        taisen: 53, //?
+        resource: {
+            steel: 400,
+            bauxite: 800,
+            fBoxL: [0, 1],
+            irako: [0, 1]
+        },
+        shipTypeText: "★潜母1 潜3 (軽+駆+海)1",
+        shipType: function (data) {
+            if (data.ASCount >= 1 && (data.SSCount + data.CVSCount) >= 3 && (data.CLCount + data.DDCount + data.DECount) >= 1) return true;
+            return false;
+        }
+    },
     /* 南方海域 */
     id_33: {
         shipNum: 2,
@@ -890,7 +928,7 @@ var missionData = {
             bucket: [0, 2],
             fBoxM: [0, 1]
 		},
-        shipTypeText: "潜母艦1 潜4",
+        shipTypeText: "潜母1 潜4",
         shipType: function (data) {
             if (data.ASCount >= 1 && (data.SSCount + data.CVSCount) >= 4) return true;
             return false;
@@ -944,8 +982,8 @@ var missionData = {
     },
     id_42: {
         shipNum: 4,
-        flgShipLv: 45,  //?
-        shipLvSum: 200, //?
+        flgShipLv: 45,
+        shipLvSum: 200,
         exp: 60,
         resource: {
             fuel: 800,
@@ -963,8 +1001,8 @@ var missionData = {
     },
     id_43: {
         shipNum: 6,
-        flgShipLv: 55,  //?
-        shipLvSum: 300, //?
+        flgShipLv: 55,
+        shipLvSum: 301, //?
         exp: 75,
         karyoku: 500,
         taisen: 280,
@@ -988,8 +1026,8 @@ var missionData = {
     },
     id_44: {
         shipNum: 6,
-        flgShipLv: 60,  //?
-        //shipLvSum: 300,
+        flgShipLv: 35,
+        shipLvSum: 210,
         exp: 45,
         drumShipNum: 3,
         drumNum: 6,
@@ -1007,6 +1045,25 @@ var missionData = {
             return false;
         }
     },
+    id_45: {
+        shipNum: 5,
+        flgShipLv: 50,
+        shipLvSum: 240,
+        exp: 35,
+        taiku: 240,
+        taisen: 300,
+        sakuteki: 180,
+        resource: {
+            fuel: 40,
+            bauxite: 220,
+            fBoxM: [0, 1]
+        },
+        shipTypeText: "★軽空1 (駆+海)4",
+        shipType: function (data) {
+            if (data.CVLCount >= 1 && (data.DDCount + data.DECount) >= 4) return true;
+            return false;
+        }
+    }
 };
 
 

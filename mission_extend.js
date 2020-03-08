@@ -1,16 +1,42 @@
-//Ver1.0.0
-//Author: twk@2ch
+StringBuilder = Java.type("java.lang.StringBuilder");
 
 load("script/utils.js");
+load("script/missionData.js");
+load("script/ScriptData.js");
+
+data_prefix = "missioncheck_";
 
 function header() {
-	return ["艦数#遠征要求隻数", "旗艦Lv#遠征要求旗艦Lv", "合計Lv#遠征要求合計Lv", "必須艦#遠征要求艦", "時間#遠征時間", "経験値#遠征経験値", "燃料#遠征獲得燃料", "弾薬#遠征獲得弾薬", "鋼材#遠征獲得鋼材", "ボーキ#遠征獲得ボーキ", "修復#遠征獲得バケツ", "建造#遠征獲得バーナー", "開発資材#遠征獲得開発資材", "家具箱#遠征獲得家具箱", "ネジ#遠征獲得改修資材"];
+	return [
+		"艦数#遠征要求隻数",
+		"旗艦Lv#遠征要求旗艦Lv",
+		"合計Lv#遠征要求合計Lv",
+		"必須艦#遠征要求艦",
+		"ドラム#必要ドラム缶数/搭載隻数",
+		"火力#必要火力",
+		"対空#必要対空",
+		"対潜#必要対潜",
+		"索敵#必要索敵",
+		"時間#遠征時間",
+		"経験値#遠征経験値",
+		"燃料#遠征獲得燃料",
+		"弾薬#遠征獲得弾薬",
+		"鋼材#遠征獲得鋼材",
+		"ボーキ#遠征獲得ボーキ",
+		"修復#遠征獲得バケツ",
+		"建造#遠征獲得バーナー",
+		"開発資材#遠征獲得開発資材",
+		"家具箱#遠征獲得家具箱",
+		"ネジ#遠征獲得改修資材",
+		"伊良子#遠征獲得伊良子"
+	];
 }
 
 function begin(fleetid) { }
 
 function body(data) {
-	return toComparable(mission_data(data.id));
+	var json = JSON.parse(data.getJsonString());
+	return toComparable(mission_data(data.id, json));
 }
 
 function end() { }
@@ -20,64 +46,112 @@ function end() { }
  * @param {number} missionID 遠征ID
  * @return {Array} 遠征データ
  */
-function mission_data(missionID){
-	switch(missionID){
-		case 1: return [2, 1, 0, '-', '00:15', 10, 0, 30, 0, 0, '0', '0', '0', '0', '0']; break;
-		case 2: return [4, 2, 0, '-', '00:30', 20, 0, 100, 30, 0, '0～1', '0', '0', '0', '0']; break;
-		case 3: return [3, 3, 0, '-', '00:20', 30, 30, 30, 40, 0, '0', '0', '0', '0', '0']; break;
-		case 4: return [3, 3, 0, '軽1 駆2', '00:50', 30, 0, 60,  0, 0, '0～1', '0', '0', '小0～1', '0']; break;
-		case 5: return [4, 3, 0, '軽1 駆2', '01:30', 40, 200, 200, 20, 20, '0', '0', '0', '0', '0']; break;
-		case 6: return [4, 4, 0, '-', '00:40', 30, 0, 0, 0, 80, '0', '0', '0', '小0～1', '0']; break;
-		case 7: return [6, 5, 0, '-', '01:00', 60, 0, 0, 50, 30, '0', '0～1', '0', '0', '0']; break;
-		case 8: return [6, 6, 0, '-', '03:00', 120, 50, 100, 50, 50, '0', '0～2', '0～1', '0', '0']; break;
-		case 9: return [4, 3, 0, '軽1 駆2', '04:00', 60, 350, 0, 0, 0, '0～2', '0', '0', '小0～1', '0']; break;
-		case 10: return [3, 3, 0, '軽2', '01:30', 40, 0, 50, 0, 30, '0～1', '0～1', '0', '0', '0']; break;
-		case 11: return [4, 6, 0, '駆2', '05:00', 40, 0, 0, 0, 250, '0～1', '0', '0', '小0～1', '0']; break;
-		case 12: return [4, 4, 0, '駆2', '08:00', 60, 50, 250, 200, 50, '0', '0', '0～1', '中0～1', '0']; break;
-		case 13: return [6, 5, 0, '軽1 駆4', '04:00', 70, 240, 300, 0, 0, '0～2', '0', '0', '小0～1', '0']; break;
-		case 14: return [6, 6, 0, '軽1 駆3', '06:00', 90, 0, 240, 200, 0, '0～1', '0', '0～1', '0', '0']; break;
-		case 15: return [6, 9, 0, '空母2 駆2', '12:00', 100, 0, 0, 300, 400, '0', '0', '0～1', '大0～1', '0']; break;
-		case 16: return [6, 10, 0, '軽1 駆2', '15:00', 120, 500, 500, 200, 200, '0', '0～2', '0～2', '0', '0']; break;
-		case 17: return [6, 20, 0, '軽1 駆3', '00:45', 30, 70, 70, 50, 0, '0', '0', '0', '0', '0']; break;
-		case 18: return [6, 15, 0, '空母3 駆2', '05:00', 60, 0, 0, 300, 100, '0～1', '0', '0', '0', '0']; break;
-		case 19: return [6, 20, 0, '航戦2 駆2', '06:00', 60, 400, 0, 50, 30, '0', '0', '0～1', '小0～1', '0']; break;
-		case 20: return [2, 1, 0, '潜1 軽1', '02:00', 40, 0, 0, 150, 0, '0', '0', '0～1', '小0～1', '0']; break;
-		case 21: return [5, 15, 30, '軽1 駆4 ドラム缶3/3', '02:20', 45, 320, 270, 0, 0, '0', '0', '0', '小0～1', '0']; break;
-		case 22: return [6, 30, 45, '重1 軽1 駆2', '03:00', 45, 0, 10, 0, 0, '0', '0', '0', '0', '0']; break;
-		case 23: return [6, 50, 200, '航戦2 駆2', '04:00', 70, 0, 20, 0, 100, '0', '0', '0', '0', '0']; break;
-		case 24: return [6, 50, 200, '軽1 駆4', '08:20', 65, 500, 0, 0, 150, '0～1', '0', '0～2', '0', '0']; break;
-		case 25: return [4, 25, 0, '重2 駆2', '40:00', 80, 900, 0, 500, 0, '0', '0', '0', '0', '0']; break;
-		case 26: return [4, 30, 0, '空母1 軽1 駆2', '80:00', 150, 0, 0, 0, 900, '0～3', '0', '0', '0', '0']; break;
-		case 27: return [2, 1, 0, '潜2', '20:00', 80, 0, 0, 800, 0, '0', '0', '0～1', '小0～2', '0']; break;
-		case 28: return [3, 30, 0, '潜3', '25:00', 100, 0, 0, 900, 350, '0', '0', '0～2', '中0～2', '0']; break;
-		case 29: return [3, 50, 0, '潜3', '24:00', 100, 0, 0, 0, 100, '0', '0', '0～1', '小0～1', '0']; break;
-		case 30: return [4, 55, 0, '潜4', '48:00', 100, 0, 0, 0, 100, '0', '0', '0～3', '0', '0']; break;
-		case 31: return [4, 60, 200, '潜4', '02:00', 50, 0, 30, 0, 0, '0', '0', '0', '小0～1', '0']; break;
-		case 32: return [3, 5, 0, '練巡1 駆2', '24:00', 300, 50, 50, 50, 50, '0', '0', '0～3', '大0～1', '0']; break;
-		case 33: return [2, 0, 0, '駆2', '00:15', 0, 0, 0, 0, 0, '0', '0', '0', '0', '0']; break;
-		case 34: return [2, 0, 0, '駆2', '00:30', 0, 0, 0, 0, 0, '0', '0', '0', '0', '0']; break;
-		case 35: return [6, 40, 0, '空母2 重1 駆1', '07:00', 100, 0, 0, 240, 280, '0', '0', '0～1', '小0～2', '0']; break;
-		case 36: return [6, 30, 0, '水母2 軽1 駆1', '09:00', 100, 480, 0, 200, 200, '0～1', '0', '0', '中0～2', '0']; break;
-		case 37: return [6, 50, 200, '軽1 駆5 ドラム缶4/3', '02:45', 50, 0, 380, 270, 0, '0', '0', '0', '小0～1', '0']; break;
-		case 38: return [6, 65, 240, '駆5 ドラム缶8/4', '02:55', 50, 420, 0, 200, 0, '0', '0', '0', '小0～1', '0']; break;
-		case 39: return [5, 3, 180, '潜水母艦1 潜4', '30:00', 130, 0, 0, 300, 0, '0～2', '0', '0', '中0～1', '0']; break;
-		case 40: return [6, 25, 150, '軽1 水母2 駆2', '06:50', 60, 300, 300, 0, 100, '0～1', '0', '0', '小0～3', '0']; break;
-		case 41: return [3, 30, 100, '(駆+海防)3', '01:00', 30, 100, 0, 0, 20, '0～1', '0', '0～1', '0', '0']; break;
-		case 42: return [4, 0, 0, '(護空+軽)1 (駆2or海防2)', '08:00', 60, 800, 0, 0, 200, '0', '0～3', '0', '大0～1', '0']; break;
-		case 43: return [6, 0, 0, '護空1 駆or海防2', '12:00', 75, 2000, 0, 0, 400, '0', '0', '0～4', '0', '0～1']; break;
-		case 44: return [6, 0, 0, '空母系2 水母1 軽1 駆2', '10:00', 45, 0, 200, 0, 800, '0', '0', '0～4', '0～2', '0']; break;
-		case 100: return [4, 15, 0, '(駆+海防)3', '00:25', 15, 45, 45, 0, 0, '0', '0', '0', '0', '0']; break;
-		case 101: return [4, 20, 144, '(駆+海防)4', '00:55', 40, 70, 40, 0, 10, '0～1', '0', '0～1', '0', '0']; break;
-		case 102: return [5, 35, 185, '軽1 (駆+海防)3', '02:15', 55, 120, 60, 0, 60, '0～1', '0', '0～2', '0', '0']; break;
-		case 103: return [5, 40, 0, '軽1 駆4', '01:50', 45, 80, 120, 0, 100, '0～2', '0～2', '0', '0', '0']; break;
-		case 110: return [6, 40, 150, '水母1 軽1 (駆+海防)2', '00:35', 35, 0, 0, 20, 30, '0～1', '0', '0', '小0～1', '0']; break;
-		case 111: return [6, 50, 0, '重1 軽1 駆3', '08:40', 70, 300, 200, 100, 0, '0～2', '0', '0～2', '0', '0']; break;
-		case 112: return [6, 50, 0, '水母1 軽1 駆4', '02:50', 50, 0, 100, 100, 180, '0～2', '0', '0', '大0～1', '0']; break;
-		case 113: return [6, 0, 0, '重2 軽1 駆2 潜1', '07:30', 60, 0, 0, 1200, 650, '0', '0', '0～4', '0', '0～1']; break;
-		// イベント
-		case 149: return [2, 0, 0, '駆2', '00:15', 0, 0, 0, 0, 0, '0', '0', '0', '0', '0']; break;
-		case 150: return [2, 0, 0, '駆2', '00:30', 0, 0, 0, 0, 0, '0', '0', '0', '0', '0']; break;
+function mission_data(missionID, json){
+	var mdata = missionData["id_" + missionID];
+	var winItem1 = json.api_win_item1;
+	var winItem2 = json.api_win_item2;
 
-		default: return [0, 0, 0, '不明', '不明', 0, 0, 0, 0, 0, '不明', '不明', '不明', '不明', '不明'];
+	var bucket = getWinItemNum(winItem1, winItem2, 1);
+	var burner = getWinItemNum(winItem1, winItem2, 2);
+	var dev = getWinItemNum(winItem1, winItem2, 3);
+	var fBox = (function() {
+		var sb = new StringBuilder();
+		var l = getWinItemNum(winItem1, winItem2, 12);
+		var m = getWinItemNum(winItem1, winItem2, 11);
+		var s = getWinItemNum(winItem1, winItem2, 10);
+		if (l > 0) return sb.append("大").append(l).toString();
+		if (m > 0) return sb.append("中").append(m).toString();
+		if (s > 0) return sb.append("小").append(s).toString();
+		return "0";
+	})();
+	var screw = getWinItemNum(winItem1, winItem2, 4);
+	var irako = getWinItemNum(winItem1, winItem2, 59);
+
+	var shipNum = (mdata !== undefined && mdata.shipNum !== undefined) ? mdata.shipNum : 0;
+	var flagShipLv = (mdata !== undefined && mdata.flagShipLv !== undefined) ? mdata.flagShipLv : 0;
+	var shipLvSum = (mdata !== undefined && mdata.shipLvSum !== undefined) ? mdata.shipLvSum : 0;
+	var shipTypeText = (mdata !== undefined && mdata.shipTypeText !== undefined) ? mdata.shipTypeText : "不明";
+	var exp = (mdata !== undefined && mdata.exp !== undefined) ? mdata.exp : 0;
+	var resource = mdata !== undefined ? mdata.resource : undefined;
+	var fuel = (resource !== undefined && resource.fuel !== undefined) ? resource.fuel : 0;
+	var ammo = (resource !== undefined && resource.ammo !== undefined) ? resource.ammo : 0;
+	var steel = (resource !== undefined && resource.steel !== undefined) ? resource.steel : 0;
+	var bauxite = (resource !== undefined && resource.bauxite !== undefined) ? resource.bauxite : 0;
+
+	var karyoku = (mdata !== undefined && mdata.karyoku !== undefined) ? mdata.karyoku : 0;
+	var taiku = (mdata !== undefined && mdata.taiku !== undefined) ? mdata.taiku : 0;
+	var taisen = (mdata !== undefined && mdata.taisen !== undefined) ? mdata.taisen : 0;
+	var sakuteki = (mdata !== undefined && mdata.sakuteki !== undefined) ? mdata.sakuteki : 0;
+
+	var drumNum = (mdata !== undefined && mdata.drumNum !== undefined) ? mdata.drumNum : 0;
+	var drumShipNum = (mdata !== undefined && mdata.drumShipNum !== undefined) ? mdata.drumShipNum : 0;
+	var drumText = drumTextFormat(drumNum, drumShipNum);
+
+	var ret = [
+		shipNum,
+		flagShipLv,
+		shipLvSum,
+		shipTypeText,
+		drumText,
+		karyoku,
+		taiku,
+		taisen,
+		sakuteki,
+		timeFormat(json.api_time),
+		exp,
+		fuel,
+		ammo,
+		steel,
+		bauxite,
+		bucket,
+		burner,
+		dev,
+		fBox,
+		screw,
+		irako
+	];
+
+	return ret;
+}
+
+function timeFormat(minutes) {
+	var h = parseInt(minutes / 60);
+	var m = parseInt(minutes % 60);
+
+	var sbh = new StringBuilder();
+	var hhs = sbh.append("00").append(h | 0).toString();
+	var hh = hhs.substring(hhs.length() - 2);
+
+	var sbm = new StringBuilder();
+	var mms = sbm.append("00").append(m | 0).toString();
+	var mm = mms.substring(mms.length() - 2);
+
+	var sb = new StringBuilder();
+	sb.append(hh).append(":").append(mm);
+
+	return sb.toString();
+}
+
+function getWinItemNum(winItem1, winItem2, itemId) {
+	if (winItem1[0] == itemId) return winItem1[1];
+	if (winItem2[0] == itemId) return winItem2[1];
+	return 0;
+}
+
+function drumTextFormat(drumNum, drumShipNum) {
+	var sb = new StringBuilder();
+	if (drumNum != 0) {
+		sb.append(drumNum).append("個");
+		if (drumShipNum != 0) {
+			sb.append("/").append(drumShipNum).append("隻");
+		}
+	} else {
+		if (drumShipNum != 0) {
+			sb.append(drumShipNum).append("隻");
+		} else {
+			sb.append("-");
+		}
 	}
+
+	return sb.toString();
 }
