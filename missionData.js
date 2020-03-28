@@ -486,7 +486,7 @@ var missionData = {
     id_113: {
         shipNum: 6,
         flagShipLv: 55,
-        shipLvSum: 410, //?
+        shipLvSum: 354, //?
         karyoku: 500,
         taisen: 280,
         exp: 60,
@@ -499,6 +499,27 @@ var missionData = {
         shipTypeText: "重2 軽1 駆2 潜1",
         shipType: function (data) {
             if (data.CACount >= 2 && data.CLCount >= 1 && data.DDCount >= 2 && (data.SSCount + data.CVSCount) >= 1) return true;
+            return false;
+        }
+    },
+    id_114: {
+        shipNum: 6,
+        flagShipLv: 0,  //?
+        shipLvSum: 0, //?
+        exp: 100,
+        resource: {
+            fuel: 600,
+            ammo: 600,
+            steel:1200,
+            bauxite: 900,
+            bucket: [0, 4],
+            screw: [0, 1]
+        },
+        shipTypeText: "水母1 軽1 駆2 他2",  //?
+        shipType: function (data) {
+            if (data.shipCount == 6) {
+                if (data.AVCount >= 1 && data.CLCount >= 1 && data.DDCount >= 2) return true;
+            }
             return false;
         }
     },
@@ -800,9 +821,10 @@ var missionData = {
     id_132: {
         shipNum: 5,
         flgShipLv: 55,
-        // shipLvSum: 0,   //?
+        shipLvSum: 270,
         exp: 70,
-        taisen: 53, //?
+        taisen: 50, //?
+        taiku: 80,  //?
         resource: {
             steel: 400,
             bauxite: 800,
@@ -959,6 +981,27 @@ var missionData = {
             return false;
         }
     },
+    id_141: {
+        shipNum: 6,
+        flgShipLv: 0,   //?
+        shipLvSum: 0,   //?
+        exp: 100,
+        resource: {
+            ammo: 600,
+            steel: 600,
+            bauxite: 1000,
+            fBoxL: [0, 2],
+            screw: [0, 1]
+        },
+        flgShipType: 5,
+        shipTypeText: "★重1 軽1 駆3 他1",
+        shipType: function (data) {
+            if (data.shipCount == 6) {
+                if (data.CACount >= 1 && data.CLCount >= 1 && data.DDCount >= 3) return true;
+            }
+            return false;
+        },
+    },
     /* 南西海域 */
     id_41: {
         shipNum: 3,
@@ -1002,7 +1045,7 @@ var missionData = {
     id_43: {
         shipNum: 6,
         flgShipLv: 55,
-        shipLvSum: 301, //?
+        shipLvSum: 300,
         exp: 75,
         karyoku: 500,
         taisen: 280,
