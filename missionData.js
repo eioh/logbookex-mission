@@ -268,6 +268,49 @@ var missionData = {
             return false;
         }
     },
+    id_104: {
+        shipNum: 5,
+        flgShipLv: 50,  //?
+        shipLvSum: 0,   //?
+        exp: 55,
+        karyoku: 287,   //?
+        taiku: 274,     //?
+        taisen: 248,    //?
+        sakuteki: 150,  //?
+        resource: {
+            ammo: 300,
+            bauxite: 100
+        },
+        shipTypeText: "軽1 駆4?",   //?
+        shipType: function (data) {
+            if (data.shipCount >= 5) {
+                if (data.CLCount >= 1 && data.DDCount >= 4) return true;
+            }
+            return false;
+        }
+    },
+    id_105: {
+        shipNum: 6,
+        flgShipLv: 55,  //?
+        shipLvSum: 0,   //?
+        exp: 90,
+        karyoku: 330,   //?
+        taiku: 338,     //?
+        taisen: 317,    //?
+        sakuteki: 211,  //?
+        resource: {
+            fuel: 100,
+            ammo: 500,
+            steel: 100
+        },
+        shipTypeText: "軽1 駆3 他2?",   //?
+        shipType: function (data) {
+            if (data.shipCount >= 6) {
+                if (data.CLCount >= 1 && data.DDCount >= 3) return true;
+            }
+            return false;
+        }
+    },
     /* 南西諸島海域 */
     id_9: {
         shipNum :4,
@@ -812,6 +855,7 @@ var missionData = {
             bauxite: 100,
             bucket: [0, 1]
         },
+        flgShipType: 16,
         shipTypeText: "★水母1 (駆+海)3 他1",
         shipType: function (data) {
             if (data.shipCount >= 5 && data.AVCount >= 1 && (data.DDCount + data.DECount) >= 3) return true;
@@ -823,14 +867,16 @@ var missionData = {
         flgShipLv: 55,
         shipLvSum: 270,
         exp: 70,
-        taisen: 50, //?
-        taiku: 80,  //?
+        taisen: 50,
+        taiku: 80,
+        karyoku: 60,
         resource: {
             steel: 400,
             bauxite: 800,
             fBoxL: [0, 1],
             irako: [0, 1]
         },
+        flgShipType: 20,
         shipTypeText: "★潜母1 潜3 (軽+駆+海)1",
         shipType: function (data) {
             if (data.ASCount >= 1 && (data.SSCount + data.CVSCount) >= 3 && (data.CLCount + data.DDCount + data.DECount) >= 1) return true;
@@ -983,9 +1029,13 @@ var missionData = {
     },
     id_141: {
         shipNum: 6,
-        flgShipLv: 0,   //?
-        shipLvSum: 0,   //?
+        flgShipLv: 55,
+        shipLvSum: 299,   //?
         exp: 100,
+        karyoku: 450,
+        taiku: 350,
+        taisen: 330,
+        sakuteki: 250,
         resource: {
             ammo: 600,
             steel: 600,
