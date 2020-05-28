@@ -270,43 +270,50 @@ var missionData = {
     },
     id_104: {
         shipNum: 5,
-        flgShipLv: 50,  //?
-        shipLvSum: 0,   //?
+        flgShipLv: 45,
+        shipLvSum: 260, //?
         exp: 55,
-        karyoku: 287,   //?
+        karyoku: 280,
         taiku: 274,     //?
-        taisen: 248,    //?
-        sakuteki: 150,  //?
+        taisen: 240,
+        sakuteki: 150,
         resource: {
             ammo: 300,
             bauxite: 100
         },
-        shipTypeText: "軽1 駆4?",   //?
+        shipTypeText: "軽1 駆3 他1? 等",   //?
         shipType: function (data) {
             if (data.shipCount >= 5) {
-                if (data.CLCount >= 1 && data.DDCount >= 4) return true;
+                if (data.CLCount >= 1 && data.DDCount >= 3) return true;
+                if (data.DDCount >= 1 && data.DECount >= 3) return true;
+                if (data.ECCount >= 1 && data.DDCount >= 2) return true;
+                if (data.CLCount >= 1 && data.DECount >= 2) return true;
             }
             return false;
         }
     },
     id_105: {
         shipNum: 6,
-        flgShipLv: 55,  //?
-        shipLvSum: 0,   //?
+        flgShipLv: 55,
+        shipLvSum: 357,   //?
         exp: 90,
-        karyoku: 330,   //?
-        taiku: 338,     //?
-        taisen: 317,    //?
-        sakuteki: 211,  //?
+        karyoku: 330,
+        taiku: 315,     //?
+        taisen: 270,
+        sakuteki: 182,  //?
         resource: {
             fuel: 100,
             ammo: 500,
             steel: 100
         },
-        shipTypeText: "軽1 駆3 他2?",   //?
+        shipTypeText: "軽1 駆3 他2? 等",   //?
         shipType: function (data) {
             if (data.shipCount >= 6) {
                 if (data.CLCount >= 1 && data.DDCount >= 3) return true;
+                if (data.DDCount >= 1 && data.DECount >= 3) return true;
+                if (data.ECCount >= 1 && data.DDCount >= 2) return true;
+                if (data.TVCount >= 1 && data.DECount >= 2) return true;
+                if (data.CLCount >= 1 && data.DECount >= 2) return true;
             }
             return false;
         }
@@ -529,7 +536,7 @@ var missionData = {
     id_113: {
         shipNum: 6,
         flagShipLv: 55,
-        shipLvSum: 354, //?
+        shipLvSum: 300,
         karyoku: 500,
         taisen: 280,
         exp: 60,
@@ -547,9 +554,13 @@ var missionData = {
     },
     id_114: {
         shipNum: 6,
-        flagShipLv: 0,  //?
-        shipLvSum: 0, //?
+        flagShipLv: 60,
+        shipLvSum: 346,
         exp: 100,
+        karyoku: 500,
+        taiku: 400,
+        taisen: 285,
+        sakuteki: 385,
         resource: {
             fuel: 600,
             ammo: 600,
