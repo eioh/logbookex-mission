@@ -5,6 +5,8 @@ data_prefix = "missioncheck_";
 
 var currentDockData = {};
 
+var GREAT_SUCCESS_RATE_BORDER = 95;
+
 function setFleet(fleetid) {
 	//艦隊データ取得
 	var ships = Packages.logbook.data.context.GlobalContext.getDock(fleetid).getShips();
@@ -35,9 +37,9 @@ function setFleet(fleetid) {
 		LHACount: 0,
 		ACVCount: 0,
 		ARCount: 0,
-		sumTaisen: 0,
 		ECCount: 0,
-		sumMinusTaisen: 0,
+		sumTaisen: 0,
+		sumTaisenAfterException: 0,
 		sumTaiku: 0,
 		sumSakuteki: 0,
 		sumKaryoku: 0,
@@ -69,21 +71,17 @@ function setFleet(fleetid) {
 		currentDockData.sumShipLv += ships[i].lv;
 
 		//艦隊合計対潜
-		currentDockData.sumTaisen += ships[i].getTaisen();
-
-		//対潜値対象外装備の合計
-		var item2 = Java.from(ships[i].getItem2());
-		currentDockData.sumMinusTaisen += getMinusTaisen(item2);
-
+		currentDockData.sumTaisen += sumParam(ships[i], 'tais', []);
+		currentDockData.sumTaisenAfterException += sumParam(ships[i], 'tais', [10, 11, 41]);
 
 		//艦隊合計対空
-		currentDockData.sumTaiku += ships[i].getTaiku();
+		currentDockData.sumTaiku += sumParam(ships[i], 'tyku', []);
 
 		//艦隊合計索敵
-		currentDockData.sumSakuteki += ships[i].getSakuteki();
+		currentDockData.sumSakuteki += sumParam(ships[i], 'saku', []);
 
-		//艦隊合計索敵
-		currentDockData.sumKaryoku += ships[i].getKaryoku();
+		//艦隊合計火力
+		currentDockData.sumKaryoku += sumParam(ships[i], 'houg', []);
 
 		//キラ艦の数
 		if (ships[i].cond > 49) currentDockData.kiraShipNum++;
@@ -127,63 +125,64 @@ function setFleet(fleetid) {
 
 //遠征成功判定
 function getCanMission(missionID){
-	var mdata = missionData["id_" + missionID];
+	var _mdata = missionData["id_" + missionID];
 
-	// 遠征のデータがない場合
-	if (mdata == undefined) return "?";
+	var mdata = _mdata ? _mdata : defaultMissionData;
 
-	var _shipNum = getValue(mdata.shipNum, 0);
-	var _flgShipLv = getValue(mdata.flgShipLv, 0);
-	var _shipLvSum = getValue(mdata.shipLvSum, 0);
-	var _flgShipType = getValue(mdata.flgShipType, 0);
-	var _drumShipNum = getValue(mdata.drumShipNum, 0);
-	var _drumNum = getValue(mdata.drumNum, 0);
-	var _taisen = getValue(mdata.taisen, 0);
-	var _taiku = getValue(mdata.taiku, 0);
-	var _sakuteki = getValue(mdata.sakuteki, 0);
-	var _karyoku = getValue(mdata.karyoku, 0);
-
+	/*
 	var curDockTaisen = mdata.disableTaisen
-		? (currentDockData.sumTaisen - currentDockData.sumMinusTaisen)
+		? currentDockData.sumTaisenAfterException
 		: currentDockData.sumTaisen;
+	*/
+	// 航空機系の対潜値は除外（暫定）
+	var curDockTaisen = currentDockData.sumTaisenAfterException;
 
 	var result = {
-		shipNum: currentDockData.shipCount >= _shipNum,
-		flgShipLv: currentDockData.flgShipLv >= _flgShipLv,
-		sumShipLv: currentDockData.sumShipLv >= _shipLvSum,
-		karyoku: currentDockData.sumKaryoku >= _karyoku,
-		taiku: currentDockData.sumTaiku >= _taiku,
-		sakuteki: currentDockData.sumSakuteki >= _sakuteki,
-		taisen: curDockTaisen >= _taisen,
-		drum: currentDockData.drumCount >= _drumNum && currentDockData.drumShipCount >= _drumShipNum,
-		fleet: mdata.shipType(currentDockData) && (_flgShipType == 0 || currentDockData.flgType == _flgShipType)
+		shipNum: currentDockData.shipCount >= mdata.shipNum,
+		flgShipLv: currentDockData.flgShipLv >= mdata.flgShipLv,
+		sumShipLv: currentDockData.sumShipLv >= mdata.shipLvSum,
+		karyoku: currentDockData.sumKaryoku >= mdata.karyoku,
+		taiku: currentDockData.sumTaiku >= mdata.taiku,
+		sakuteki: currentDockData.sumSakuteki >= mdata.sakuteki,
+		taisen: curDockTaisen >= mdata.taisen,
+		drum: currentDockData.drumCount >= mdata.drumNum && currentDockData.drumShipCount >= mdata.drumShipNum,
+		fleet: mdata.shipType(currentDockData) && (mdata.flgShipType == 0 || currentDockData.flgType == mdata.flgShipType)
 	};
 
 	setTmpData("missionID_" + missionID, JSON.stringify(result));
 	var result2 = Object.keys(result).filter(function(v) {return result[v] === false});
 
+	if (mdata == undefined) return "?";
 	if (result2.length == 0) {
-		// 特別な大成功条件
-		if (mdata.greatSuccess != undefined && mdata.greatSuccess(currentDockData)) {
-			return "◎";
-		// 全キラ
-		} else if (currentDockData.shipCount == currentDockData.kiraShipNum) {
-			return "◎";
+		// ドラム缶型
+		if (mdata.greatSuccess === 'drum') {
+			var drumBonus = 0;
+			if (mdata.drumNum2 > 0) {
+				if (mdata.drumNum2 > currentDockData.drumCount) {
+					drumBonus = -15;
+				} else {
+					drumBonus = 20;
+				}
+			}
+			var greatSuccessRate = 20 + currentDockData.kiraShipNum * 15 + drumBonus + 1;
+			if (greatSuccessRate >= GREAT_SUCCESS_RATE_BORDER) return "◎";
+		}
+		// 旗艦レベル型
+		if (mdata.greatSuccess === 'flagshipLv') {
+			var greatSuccessRate = 20 + currentDockData.kiraShipNum * 15
+				- 5 + parseInt(Math.sqrt(currentDockData.flgShipLv) + currentDockData.flgShipLv / 10) + 1;
+			if (greatSuccessRate >= GREAT_SUCCESS_RATE_BORDER) return "◎";
+		}
+		// 通常型
+		if (currentDockData.shipCount == currentDockData.kiraShipNum) {
+			var greatSuccessRate = 20 + currentDockData.kiraShipNum * 15 + 1;
+			if (greatSuccessRate >= GREAT_SUCCESS_RATE_BORDER) return "◎";
 		} else {
 			return "○";
 		}
 	} else {
 		return "×";
 	}
-}
-
-/**
- * valueがundefinedのときにdefaultValueを返す
- * @param {*} value
- * @param {*} defaultValue
- */
-function getValue(value, defaultValue) {
-	return value == undefined ? defaultValue : value;
 }
 
 /**
@@ -203,22 +202,80 @@ function isEC(shipName) {
 	return false;
 }
 
-/**
- * 無効な装備対潜値の合計
- * @param {Array.<logbook.dto.ItemDto>} items 装備
- */
-function getMinusTaisen(items) {
-	var ret = items.filter(function(item) {
-		// 装備なし
-		if (item == null) return false;
-		return item.type2 == 10		// 水上偵察機
-			|| item.type2 == 11		// 水上爆撃機
-			|| item.type2 == 41;	// 大型飛行艇
-	}).reduce(function (sum, item) {
-		return sum + item.param.tais;
-	}, 0);
+function sumParam(ship, kind, exceptionList) {
+	var items = getAllItems(ship);
+	var param = ship.param[kind];
+	var exceptionSum = items.filter(function(item){
+		return exceptionList.indexOf(item.type2) != -1;
+	}).map(function(item) {
+		return item.param[kind];
+	}).reduce(reduceSum, 0);
+	var improvementBonus = items.map(function(item) {
+		var lv = item.level;
+		var sqrt = Math.sqrt;
+		if (kind == 'houg') {
+			switch(item.type3) {
+				/** 小口径 */
+				case 1: return 0.5 * sqrt(lv);	// ?
+				/** 中口径 */
+				case 2: return sqrt(lv);
+				/** 大口径 */
+				case 3: return 0.97 * sqrt(lv);	// ?
+				/** 副砲 */
+				case 4: return 0.15 * lv;
+				/** 対艦強化弾 */
+				case 13: return 0.5 * sqrt(lv);
+				/** 対空機銃 */
+				case 15: return 0.5 * sqrt(lv);
+				default: return 0;
+			}
+		}
+		if (kind == 'tyku') {
+			switch(item.type3) {
+				/** 対空機銃 */
+				case 15: return sqrt(lv);
+				/** 高角砲 */
+				case 16: return 0.3 * lv;
+				default: return 0;
+			}
+		}
+		if (kind == 'tais') {
+			switch(item.type3) {
+				/** 爆雷投射機, 爆雷 */
+				case 17: return sqrt(lv);
+				/** ソナー */
+				case 18: return sqrt(lv);
+				default: return 0;
+			}
+		}
+		if (kind == 'saku') {
+			switch(item.type2) {
+				/** 水上偵察機 */
+				case 10: return 0.95 * sqrt(lv);	// ?
+				/** 小型電探 */
+				case 12: return sqrt(lv);
+				/** 大型電探 */
+				case 13: return 0.95 * sqrt(lv);	// ?
+				/** 大型電探(II) */
+				case 93: return 0.95 * sqrt(lv);	// ?
+				default: return 0;
+			}
+		}
+	}).reduce(reduceSum, 0);
 
-	return ret;
+	return param - exceptionSum + improvementBonus;
+}
+
+function getAllItems(ship) {
+	var items = Java.from(ship.item2);
+	items.push(ship.slotExItem);
+	return items.filter(function(item) {
+		return item;
+	});
+}
+
+function reduceSum(prev, cur) {
+	return prev + cur;
 }
 
 
