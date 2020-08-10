@@ -35,6 +35,8 @@ function update(type, data){
 		case DataType.CHANGE:
 		case DataType.MISSION_RESULT:
 		case DataType.POWERUP:
+		case DataType.SHIP3:		//装備したとき
+		case DataType.SLOT_DEPRIVE:	//装備している艦から装備移動したとき
 			doCheck();
 			break;
 	}
