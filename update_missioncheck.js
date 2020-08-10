@@ -17,10 +17,10 @@ function doCheck() {
 		var canCurrent = "";
 		var canPrevious = "";
 		if(current[i].mission != null) {
-			canCurrent = getCanMission(current[i].missionId);
+			canCurrent = getCanMission(current[i].missionId, current[i].mission);
 		}
 		if(previous[i].mission != null) {
-			canPrevious = getCanMission(previous[i].missionId);
+			canPrevious = getCanMission(previous[i].missionId, current[i].mission);
 		}
 		setTmpData(fleetid, canCurrent);
 		setTmpData(fleetid + "p", canPrevious);

@@ -21,7 +21,6 @@ var defaultMissionData = {
     shipType: function (data) { // 艦種条件を満たしているか判定
         return false;
     },
-    greatSuccess: null      // 通常の条件以外の大成功条件
 };
 
 var _missionData = {

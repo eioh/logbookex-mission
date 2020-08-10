@@ -67,42 +67,37 @@ function mission_data(missionID, json){
 	var screw = getWinItemNum(winItem1, winItem2, 4);
 	var irako = getWinItemNum(winItem1, winItem2, 59);
 
-	var shipNum = (mdata !== undefined && mdata.shipNum !== undefined) ? mdata.shipNum : 0;
-	var flagShipLv = (mdata !== undefined && mdata.flagShipLv !== undefined) ? mdata.flagShipLv : 0;
-	var shipLvSum = (mdata !== undefined && mdata.shipLvSum !== undefined) ? mdata.shipLvSum : 0;
-	var shipTypeText = (mdata !== undefined && mdata.shipTypeText !== undefined) ? mdata.shipTypeText : "不明";
-	var exp = (mdata !== undefined && mdata.exp !== undefined) ? mdata.exp : 0;
-	var resource = mdata !== undefined ? mdata.resource : undefined;
-	var fuel = (resource !== undefined && resource.fuel !== undefined) ? resource.fuel : 0;
-	var ammo = (resource !== undefined && resource.ammo !== undefined) ? resource.ammo : 0;
-	var steel = (resource !== undefined && resource.steel !== undefined) ? resource.steel : 0;
-	var bauxite = (resource !== undefined && resource.bauxite !== undefined) ? resource.bauxite : 0;
-
-	var karyoku = (mdata !== undefined && mdata.karyoku !== undefined) ? mdata.karyoku : 0;
-	var taiku = (mdata !== undefined && mdata.taiku !== undefined) ? mdata.taiku : 0;
-	var taisen = (mdata !== undefined && mdata.taisen !== undefined) ? mdata.taisen : 0;
-	var sakuteki = (mdata !== undefined && mdata.sakuteki !== undefined) ? mdata.sakuteki : 0;
+	if (mdata == undefined) {
+		// イベント遠征用
+		if (json.api_name == "前衛支援任務") {
+			mdata = missionData.id_33;
+		} else if (json.api_name == "艦隊決戦支援任務") {
+			mdata = missionData.id_34;
+		} else {// デフォルト
+			mdata = defaultMissionData;
+		}
+	}
 
 	var drumNum = (mdata !== undefined && mdata.drumNum !== undefined) ? mdata.drumNum : 0;
 	var drumShipNum = (mdata !== undefined && mdata.drumShipNum !== undefined) ? mdata.drumShipNum : 0;
 	var drumText = drumTextFormat(drumNum, drumShipNum);
 
 	var ret = [
-		shipNum,
-		flagShipLv,
-		shipLvSum,
-		shipTypeText,
+		mdata.shipNum,
+		mdata.flagShipLv,
+		mdata.shipLvSum,
+		mdata.shipTypeText,
 		drumText,
-		karyoku,
-		taiku,
-		taisen,
-		sakuteki,
+		mdata.karyoku,
+		mdata.taiku,
+		mdata.taisen,
+		mdata.sakuteki,
 		timeFormat(json.api_time),
-		exp,
-		fuel,
-		ammo,
-		steel,
-		bauxite,
+		mdata.exp,
+		mdata.fuel,
+		mdata.ammo,
+		mdata.steel,
+		mdata.bauxite,
 		bucket,
 		burner,
 		dev,

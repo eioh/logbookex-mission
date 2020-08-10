@@ -124,10 +124,23 @@ function setFleet(fleetid) {
 }
 
 //遠征成功判定
-function getCanMission(missionID){
+function getCanMission(missionID, missionName){
 	var _mdata = missionData["id_" + missionID];
-
-	var mdata = _mdata ? _mdata : defaultMissionData;
+	var mdata;
+	var unknownMission = false;
+	if (_mdata == undefined) {
+		// イベント遠征用
+		if (missionName == "前衛支援任務") {
+			mdata = missionData.id_33;
+		} else if (missionName == "艦隊決戦支援任務") {
+			mdata = missionData.id_34;
+		} else {// デフォルト
+			unknownMission = true;
+			mdata = defaultMissionData;
+		}
+	} else {
+		mdata = _mdata;
+	}
 
 	/*
 	var curDockTaisen = mdata.disableTaisen
@@ -152,7 +165,7 @@ function getCanMission(missionID){
 	setTmpData("missionID_" + missionID, JSON.stringify(result));
 	var result2 = Object.keys(result).filter(function(v) {return result[v] === false});
 
-	if (mdata == undefined) return "?";
+	if (unknownMission) return "?";
 	if (result2.length == 0) {
 		// ドラム缶型
 		if (mdata.greatSuccess === 'drum') {
@@ -170,7 +183,7 @@ function getCanMission(missionID){
 		// 旗艦レベル型
 		if (mdata.greatSuccess === 'flagshipLv') {
 			var greatSuccessRate = 20 + currentDockData.kiraShipNum * 15
-				- 5 + parseInt(Math.sqrt(currentDockData.flgShipLv) + currentDockData.flgShipLv / 10) + 1;
+				- 5 + parseInt(Math.sqrt(currentDockData.flgShipLv) + currentDockData.flgShipLv / 10) + 1
 			if (greatSuccessRate >= GREAT_SUCCESS_RATE_BORDER) return "◎";
 		}
 		// 通常型
