@@ -8,6 +8,9 @@ data_prefix = "missioncheck_";
 
 function header() {
 	return [
+		"ID2#ソート用遠征ID",
+		"ID3#ゲーム中の表示ID",
+		"海域名#遠征海域名",
 		"艦数#遠征要求隻数",
 		"旗艦Lv#遠征要求旗艦Lv",
 		"合計Lv#遠征要求合計Lv",
@@ -78,13 +81,14 @@ function mission_data(missionID, json){
 		}
 	}
 
-	var drumNum = (mdata !== undefined && mdata.drumNum !== undefined) ? mdata.drumNum : 0;
-	var drumShipNum = (mdata !== undefined && mdata.drumShipNum !== undefined) ? mdata.drumShipNum : 0;
-	var drumText = drumTextFormat(drumNum, drumShipNum);
+	var drumText = drumTextFormat(mdata.drumNum, mdata.drumNum2, mdata.drumShipNum);
 
 	var ret = [
+		getIdForSort(json.api_maparea_id, json.api_id),
+		json.api_disp_no,
+		getMapareaName(json.api_maparea_id),
 		mdata.shipNum,
-		mdata.flagShipLv,
+		mdata.flgShipLv,
 		mdata.shipLvSum,
 		mdata.shipTypeText,
 		drumText,
@@ -133,20 +137,60 @@ function getWinItemNum(winItem1, winItem2, itemId) {
 	return 0;
 }
 
-function drumTextFormat(drumNum, drumShipNum) {
-	var sb = new StringBuilder();
-	if (drumNum != 0) {
-		sb.append(drumNum).append("個");
-		if (drumShipNum != 0) {
-			sb.append("/").append(drumShipNum).append("隻");
-		}
+function drumTextFormat(drumNum, drumNum2, drumShipNum) {
+	var drumNumSb = new StringBuilder();
+	var drumShipNumSb = new StringBuilder();
+	var retSb = new StringBuilder();
+	if (drumNum != 0) drumNumSb.append(drumNum).append("個");
+	if (drumNum2 != 0) drumNumSb.append("(大:").append(drumNum2).append("個)");
+	if (drumShipNum != 0) drumShipNumSb.append(drumShipNum).append("隻");
+	if (drumNumSb.length() != 0 && drumShipNumSb.length() != 0) {
+		retSb.append(drumNumSb).append("/").append(drumShipNumSb);
 	} else {
-		if (drumShipNum != 0) {
-			sb.append(drumShipNum).append("隻");
-		} else {
-			sb.append("-");
-		}
+		retSb.append(drumNumSb).append(drumShipNumSb);
+		if (retSb.length() == 0) ret = retSb.append("-");
 	}
 
-	return sb.toString();
+	return retSb.toString();
+}
+
+/**
+ * ソート用IDを取得
+ * @param {number} mapId 海域ID
+ * @param {number} id 遠征ID
+ * @return {number} ID
+ */
+function getIdForSort(mapId, id) {
+	var mapIndex = (function (x) {
+		switch (x) {
+			case 1: return 1;
+			case 2: return 2;
+			case 3: return 3;
+			case 4: return 5;
+			case 5: return 6;
+			case 6: return 7;
+			case 7: return 4;
+			default: return x;
+		}
+	})(mapId);
+
+	return (mapIndex * 1000 + id) | 0;
+}
+
+/**
+ * 海域名を取得
+ * @param {number} mapId 海域ID
+ * @return {string} 海域名
+ */
+function getMapareaName(mapId) {
+	switch (mapId) {
+		case 1: return "鎮守府海域";
+		case 2: return "南西海域";
+		case 3: return "北方海域";
+		case 4: return "西方海域";
+		case 5: return "南方海域";
+		case 6: return "中部海域";
+		case 7: return "南西海域";
+		default: return "期間限定海域";
+	}
 }
