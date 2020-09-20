@@ -4,7 +4,6 @@ load("script/ScriptData.js");
 
 data_prefix = "missioncheck_";
 
-
 Integer = Java.type("java.lang.Integer");
 TableItem = Java.type("org.eclipse.swt.widgets.TableItem");
 SWT = Java.type("org.eclipse.swt.SWT");
@@ -104,8 +103,6 @@ function create(table, data, index) {
     var mission = data[0].get();
     var item = new TableItem(table, SWT.NONE);
     item.setData(mission);
-
-    var id = mission.id;
 
     // 偶数行に背景色を付ける
     if ((index % 2) !== 0) {

@@ -217,16 +217,16 @@ var _missionData = {
     id_104: {
         shipNum: 5,
         flgShipLv: 45,
-        shipLvSum: 260, //?
+        shipLvSum: 230,
         exp: 55,
         karyoku: 280,
-        taiku: 274,     //?
+        taiku: 220,
         taisen: 240,
         sakuteki: 150,
         ammo: 300,
         bauxite: 100,
         greatSuccess: 'flagshipLv',
-        shipTypeText: "軽1 駆3 他1? 等",   //?
+        shipTypeText: "軽1 駆3 他1 等",
         shipType: function (data) {
             if (data.shipCount >= 5) {
                 if (data.CLCount >= 1 && data.DDCount >= 3) return true;
@@ -240,17 +240,17 @@ var _missionData = {
     id_105: {
         shipNum: 6,
         flgShipLv: 55,
-        shipLvSum: 353,   //?
+        shipLvSum: 290,
         exp: 90,
         karyoku: 330,
-        taiku: 314,     //?
+        taiku: 300,
         taisen: 270,
-        sakuteki: 180,  //?
+        sakuteki: 180,
         fuel: 100,
         ammo: 500,
         steel: 100,
         greatSuccess: 'flagshipLv',
-        shipTypeText: "軽1 駆3 他2? 等",   //?
+        shipTypeText: "軽1 駆3 他2 等",
         shipType: function (data) {
             if (data.shipCount >= 6) {
                 if (data.CLCount >= 1 && data.DDCount >= 3) return true;
@@ -453,7 +453,7 @@ var _missionData = {
     id_114: {
         shipNum: 6,
         flagShipLv: 60,
-        shipLvSum: 346, //?
+        shipLvSum: 330,
         exp: 100,
         karyoku: 510,
         taiku: 400,
@@ -464,7 +464,7 @@ var _missionData = {
         steel:1200,
         bauxite: 900,
         greatSuccess: 'flagshipLv',
-        shipTypeText: "水母1 軽1 駆2 他2?",  //?
+        shipTypeText: "水母1 軽1 駆2 他2",
         shipType: function (data) {
             if (data.shipCount == 6) {
                 if (data.AVCount >= 1 && data.CLCount >= 1 && data.DDCount >= 2) return true;
@@ -683,7 +683,7 @@ var _missionData = {
         steel: 50,
         bauxite: 50,
         flgShipType: 21,
-        greatSuccess: 'flagshipLv', //?
+        greatSuccess: 'flagshipLv',
         shipTypeText: "★練巡1 駆2",
         shipType: function (data) {
             if (data.TVCount >= 1 && data.DDCount >= 2) return true;
@@ -844,7 +844,7 @@ var _missionData = {
     id_141: {
         shipNum: 6,
         flgShipLv: 55,
-        shipLvSum: 299,   //?
+        shipLvSum: 290,
         exp: 100,
         karyoku: 450,
         taiku: 350,
@@ -860,6 +860,25 @@ var _missionData = {
             if (data.shipCount == 6) {
                 if (data.CACount >= 1 && data.CLCount >= 1 && data.DDCount >= 3) return true;
             }
+            return false;
+        },
+    },
+    id_142: {
+        shipNum: 5,
+        flgShipLv: 70,
+        shipLvSum: 353, // ?
+        exp: 80,
+        karyoku: 280,
+        taiku: 289, // ?
+        taisen: 278,    // ?
+        sakuteki: 164,  // ?
+        ammo: 480,
+        drumNum: 5, // ?
+        drumShipNum: 1, // ?
+        greatSuccess: 'nomal', //?
+        shipTypeText: "駆5",
+        shipType: function (data) {
+            if (data.DDCount >= 5) return true;
             return false;
         },
     },
@@ -951,6 +970,25 @@ var _missionData = {
         shipTypeText: "★軽空1 (駆+海)4",
         shipType: function (data) {
             if (data.CVLCount >= 1 && (data.DDCount + data.DECount) >= 4) return true;
+            return false;
+        }
+    },
+    id_46: {
+        shipNum: 5,
+        flgShipLv: 65,  // ?
+        shipLvSum: 300,
+        exp: 80,
+        karyoku: 350,   // ?
+        taiku: 324, // ?
+        taisen: 220,    // ?
+        sakuteki: 220,  // ?
+        fuel: 300,
+        steel: 150,
+        bauxite: 380,
+        greatSuccess: 'nomal', // ?
+        shipTypeText: "重2 軽1 駆2?",
+        shipType: function (data) {
+            if (data.CACount >= 2 && data.CLCount >= 1 && data.DDCount >= 2) return true;
             return false;
         }
     }
